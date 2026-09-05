@@ -239,3 +239,13 @@ vec3 wp = vec3(position.x * 7.0, 0.0, position.z * 25.0);
   float maxSliceWidth = 9.2195 * currentSliceRadius;
   float normalizedX = wp.x / (maxSliceWidth + 0.001);
   float tunnelAngle = normalizedX * 3.14159265;
+
+  float jitterAngle = snoise(vec3(position.x * 15.0, position.y * 15.0, uTime * 0.1)) * 0.35;
+  float jitterZ = snoise(vec3(position.y * 15.0, position.z * 15.0, uTime * 0.1)) * 4.0;
+  float ambientSwirl = snoise(vec3(position.x * 5.0, position.y * 5.0, uTime * 0.2)) * 3.0;
+  tunnelAngle += jitterAngle + ambientSwirl * uSwirl;
+
+  float dynamicR = tunnelR - wn;
+  vec3 tunnelPos = vec3(dynamicR * sin(tunnelAngle), -dynamicR * cos(tunnelAngle), wp.z + jitterZ);
+
+  vec3 finalPos = tunnelPos * uScale;
