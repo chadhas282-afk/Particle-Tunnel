@@ -98,3 +98,13 @@
         const FinalPass = {
             uniforms: {
                 iTime: { value: 0 },
+                tDiffuse: { value: null }, 
+                torusTexture: { value: null }, 
+                bloomTexture: { value: null }, 
+                haloTexture: { value: null },
+                uBg: { value: hexToVec3(bgColor) },
+                uFlameA: { value: hexToVec3(flameColor) },
+                uFlameB: { value: hexToVec3(flameColor2) },
+                uFlameAmt: { value: flameAmt }
+            },
+            vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position, 1.0); }`,
