@@ -1,14 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tunnel</title>
     <style>
-        html, body { margin:0; padding:0; background:#000 }
-        body { height:100% }
-        canvas#scene { position:fixed; inset:0; width:100vw; height:100vh; display:block; }
-        #scroll-host { height:560vh; }
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000
+        }
+
+        body {
+            height: 100%
+        }
+
+        canvas#scene {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+
+        #scroll-host {
+            height: 560vh;
+        }
+
         #scroll-hint {
             position: fixed;
             bottom: 18px;
@@ -30,6 +50,7 @@
         }
         </script>
 </head>
+
 <body>
     <canvas id="scene"></canvas>
     <div id="scroll-host"></div>
@@ -68,7 +89,7 @@
         const brightness = 0.4;
         const swirl = 0.39;
         const spin = 0.065;
-         const scale = 0.17;
+        const scale = 0.17;
         const scrollFly = 34;
         const scrollSwirl = 1.5;
         const scrollRoll = 0.05;
@@ -78,7 +99,7 @@
         const pointerStrength = 0.8;
 
         const canvas = document.getElementById('scene');
-         const renderer = new THREE.WebGL1Renderer({ canvas, antialias: true });
+        const renderer = new THREE.WebGL1Renderer({ canvas, antialias: true });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight, false);
         renderer.shadowMap.enabled = true;
@@ -88,7 +109,7 @@
         scene.background = new THREE.Color(0x000000);
         scene.fog = new THREE.Fog(0x000000, 0, 15);
 
-         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 400);
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 400);
         camera.position.set(0, 0, 20);
         camera.layers.enable(LAYERS.TORUS_SCENE);
         camera.layers.enable(LAYERS.BLOOM_SCENE);
@@ -98,9 +119,9 @@
         const FinalPass = {
             uniforms: {
                 iTime: { value: 0 },
-                tDiffuse: { value: null }, 
-                torusTexture: { value: null }, 
-                bloomTexture: { value: null }, 
+                tDiffuse: { value: null },
+                torusTexture: { value: null },
+                bloomTexture: { value: null },
                 haloTexture: { value: null },
                 uBg: { value: hexToVec3(bgColor) },
                 uFlameA: { value: hexToVec3(flameColor) },
@@ -128,18 +149,18 @@ vec2 uv = 2.*vUv - 1.;
   gl_FragColor = vec4(bg + flame*uFlameAmt + texture2D(bloomTexture, vUv).xyz + texture2D(torusTexture, vUv).xyz + texture2D(tDiffuse, vUv).xyz + halo, 1.);
 }
 `
- };
+        };
 
         const renderScene = new RenderPass(scene, camera);
 
-        const torusComposer = new EffectComposer(renderer); 
+        const torusComposer = new EffectComposer(renderer);
         torusComposer.renderToScreen = false;
         torusComposer.addPass(renderScene);
         torusComposer.addPass(new ShaderPass(GammaCorrectionShader));
         torusComposer.addPass(new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.22, 0.2, 0));
         torusComposer.addPass(new ShaderPass(CopyShader));
 
-        const bloomComposer = new EffectComposer(renderer); 
+        const bloomComposer = new EffectComposer(renderer);
         bloomComposer.renderToScreen = false;
         bloomComposer.addPass(renderScene);
         bloomComposer.addPass(new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.7, 0.6, 0));
@@ -148,27 +169,27 @@ vec2 uv = 2.*vUv - 1.;
         const finalPass = new ShaderPass(FinalPass);
         finalPass.uniforms.bloomTexture.value = bloomComposer.renderTarget1.texture;
         finalPass.uniforms.torusTexture.value = torusComposer.renderTarget1.texture;
-                
+
         const finalComposer = new EffectComposer(renderer);
-        finalComposer.addPass(renderScene); 
+        finalComposer.addPass(renderScene);
         finalComposer.addPass(finalPass);
 
         const tunnelGeometry = new THREE.SphereGeometry(4.2, 200, 600);
         const tunnelUniforms = {
-            uTime:       { value: 0 },
-            uAppear:     { value: 0 },
-            uColLow:     { value: hexToVec3(colorLow) },
-            uColHigh:    { value: hexToVec3(colorHigh) },
-            uOpacity:    { value: opacity },
-            uSize:       { value: pointSize },
+            uTime: { value: 0 },
+            uAppear: { value: 0 },
+            uColLow: { value: hexToVec3(colorLow) },
+            uColHigh: { value: hexToVec3(colorHigh) },
+            uOpacity: { value: opacity },
+            uSize: { value: pointSize },
             uBrightness: { value: brightness },
-            uSwirl:      { value: swirl },
-            uScale:      { value: scale },
-            uCursor:        { value: new THREE.Vector3() },
-            uRepelRadius:   { value: pointerRadius },
+            uSwirl: { value: swirl },
+            uScale: { value: scale },
+            uCursor: { value: new THREE.Vector3() },
+            uRepelRadius: { value: pointerRadius },
             uRepelStrength: { value: pointerStrength },
-            uActivity:      { value: 0 }
-            };
+            uActivity: { value: 0 }
+        };
 
         const tunnelSnoise = `
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
@@ -208,3 +229,13 @@ uniform vec3 uCursor; uniform float uRepelRadius; uniform float uRepelStrength; 
 varying float vFade; varying vec3 vColor;
 ${tunnelSnoise}
 void main() {
+vec3 wp = vec3(position.x * 7.0, 0.0, position.z * 25.0);
+  wp.x += position.y * 6.0;
+  float wn = snoise(vec3(wp.x * 0.08, wp.z * 0.08, uTime * 0.15)) * 2.0;
+  wn += snoise(vec3(wp.x * 0.16, wp.z * 0.16, uTime * 0.3)) * 0.8;
+
+  float tunnelR = 12.0;
+  float currentSliceRadius = sqrt(max(0.0, 17.64 - position.z * position.z));
+  float maxSliceWidth = 9.2195 * currentSliceRadius;
+  float normalizedX = wp.x / (maxSliceWidth + 0.001);
+  float tunnelAngle = normalizedX * 3.14159265;
