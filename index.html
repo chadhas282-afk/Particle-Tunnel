@@ -198,3 +198,13 @@ float snoise(vec3 v){
 
         const tunnelMaterial = new THREE.ShaderMaterial({
             transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            uniforms: tunnelUniforms,
+            vertexShader: `
+uniform float uTime; uniform float uSize; uniform float uSwirl; uniform float uScale;
+uniform vec3 uColLow; uniform vec3 uColHigh;
+uniform vec3 uCursor; uniform float uRepelRadius; uniform float uRepelStrength; uniform float uActivity;
+varying float vFade; varying vec3 vColor;
+${tunnelSnoise}
+void main() {
