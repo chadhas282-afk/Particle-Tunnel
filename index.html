@@ -259,3 +259,13 @@ vec3 wp = vec3(position.x * 7.0, 0.0, position.z * 25.0);
   float colMix = smoothstep(-3.0, 3.0, position.y + position.x * 0.5);
   vColor = mix(uColLow, uColHigh, clamp(colMix, 0.0, 1.0));
   vFade = 1.0;
+
+  gl_PointSize = uSize * (10.0 / -mvPosition.z);
+  gl_PointSize = max(gl_PointSize, 1.5);
+  gl_Position = projectionMatrix * mvPosition;
+}
+`,
+            fragmentShader: `
+uniform float uOpacity; uniform float uBrightness; uniform float uAppear;
+varying float vFade; varying vec3 vColor;
+void main() {
