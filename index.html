@@ -48,3 +48,13 @@
         const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
         function hexToVec3(hex) {
             const n = parseInt(hex.slice(1), 16);
+            return new THREE.Vector3(((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255);
+        }
+
+        const LAYERS = { NONE: 0, TORUS_SCENE: 1, BLOOM_SCENE: 2, ENTIRE_SCENE: 3 };
+
+        const bgColor = '#0a0524';
+        const flameColor = '#2bf0ff';
+        const flameColor2 = '#7a3cff';
+        const flameAmt = 0.2;
+        const atmoColor = '#8fe6ff';
