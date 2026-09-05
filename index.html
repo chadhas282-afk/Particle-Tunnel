@@ -128,3 +128,13 @@ vec2 uv = 2.*vUv - 1.;
   gl_FragColor = vec4(bg + flame*uFlameAmt + texture2D(bloomTexture, vUv).xyz + texture2D(torusTexture, vUv).xyz + texture2D(tDiffuse, vUv).xyz + halo, 1.);
 }
 `
+ };
+
+        const renderScene = new RenderPass(scene, camera);
+
+        const torusComposer = new EffectComposer(renderer); 
+        torusComposer.renderToScreen = false;
+        torusComposer.addPass(renderScene);
+        torusComposer.addPass(new ShaderPass(GammaCorrectionShader));
+        torusComposer.addPass(new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 0.22, 0.2, 0));
+        torusComposer.addPass(new ShaderPass(CopyShader));
