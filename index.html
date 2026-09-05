@@ -8,3 +8,13 @@
         html, body { margin:0; padding:0; background:#000 }
         body { height:100% }
         canvas#scene { position:fixed; inset:0; width:100vw; height:100vh; display:block; }
+        #scroll-host { height:560vh; }
+        #scroll-hint {
+            position: fixed;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.55);
+            font-size: 11px;
+            text-transform: uppercase;
+            pointer-events: none;
