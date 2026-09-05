@@ -148,3 +148,13 @@ vec2 uv = 2.*vUv - 1.;
         const finalPass = new ShaderPass(FinalPass);
         finalPass.uniforms.bloomTexture.value = bloomComposer.renderTarget1.texture;
         finalPass.uniforms.torusTexture.value = torusComposer.renderTarget1.texture;
+                
+        const finalComposer = new EffectComposer(renderer);
+        finalComposer.addPass(renderScene); 
+        finalComposer.addPass(finalPass);
+
+        const tunnelGeometry = new THREE.SphereGeometry(4.2, 200, 600);
+        const tunnelUniforms = {
+            uTime:       { value: 0 },
+            uAppear:     { value: 0 },
+            uColLow:     { value: hexToVec3(colorLow) },
