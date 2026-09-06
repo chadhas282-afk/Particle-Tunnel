@@ -339,3 +339,13 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
             atmoMaterial.uniforms.uTime.value = t * atmoSpeed * 8.0;
             atmoPoints.position.copy(camera.position);
             finalPass.uniforms.iTime.value = t;
+            };
+
+        scene.add(atmoPoints);
+
+        let scrollTarget = 0, scrollSmooth = 0, scrollCurrent = 0;
+        const updateScroll = () => {
+            const scrollHeight = document.documentElement.scrollHeight;
+            const innerHeight = window.innerHeight;
+            if (scrollHeight > innerHeight) {
+                scrollTarget = clamp(window.scrollY / (scrollHeight - innerHeight), 0, 1);
