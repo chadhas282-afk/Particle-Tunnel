@@ -388,3 +388,13 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
             const idle = (performance.now() - POINTER.lastMove) / 1000;
             POINTER.activity += (((POINTER.active && idle < 3) ? 1 : 0) - POINTER.activity) * 0.06;
         }
+
+const sceneObj = {
+            t0: performance.now() / 1000,
+            appearStart: performance.now(),
+            rollPhase: 0,
+            render: function(scroll, m) {
+                const t = performance.now() / 1000;
+                const dt = Math.min(0.05, t - this.t0); 
+                this.t0 = t;
+                tunnelUniforms.uTime.value = t;
