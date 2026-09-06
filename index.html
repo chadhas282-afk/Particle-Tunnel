@@ -359,3 +359,13 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
         const mouseTarget = new THREE.Vector2();
         const mouse = new THREE.Vector2();
         const POINTER = { active: false, lastMove: 0, world: new THREE.Vector3(), activity: 0 };
+               
+        window.addEventListener('mousemove', (e) => {
+            mouseTarget.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseTarget.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            POINTER.active = true;
+            POINTER.lastMove = performance.now();
+        });
+        window.addEventListener('mouseout', () => {
+            POINTER.active = false;
+        });
