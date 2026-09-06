@@ -309,3 +309,13 @@ void main() {
             },
             vertexShader: `
 attribute float size; attribute float seed; uniform float uTime; uniform vec2 uRes;
+varying float vA;
+vec3 warp(vec3 p, float t){ float c=0.9,a=1.9,b=0.02,s=0.05; p*=2.;
+  p.x+=c*sin(s*t+a*p.y)+t*b; p.y+=c*cos(s*t+a*p.x); p.y+=c*sin(s*t+a*p.z)+t*b;
+  p.z+=c*cos(s*t+a*p.y); p.z+=c*sin(s*t+a*p.x)+t*b; p.x+=c*cos(s*t+a*p.z);
+  return cos(p+vec3(1,2,4)); }
+void main(){
+  vec3 v = position*4.0 + warp(position, uTime)*1.2;
+  vec4 mv = modelViewMatrix * vec4(v, 1.0);
+  float r = length(v); float farF = 1.0 - smoothstep(5.0, 6.5, r); float nearF = smoothstep(0.0, 0.5, -mv.z);
+  vA = farF * nearF;
