@@ -48,7 +48,7 @@
                 "three/addons/": "https://unpkg.com/three@0.143.0/examples/jsm/"
             }
         }
-        </script>
+    </script>
 </head>
 
 <body>
@@ -139,7 +139,7 @@ vec3 warp3d(vec3 pos, float t){ float curv=.8,a=1.9,b=0.7; pos*=2.;
   pos.z+=curv*sin(t+a*pos.x)+t*b; pos.x+=curv*cos(t+a*pos.z);
   return 0.5+0.5*cos(pos.xyz+vec3(1,2,4)); }
 void main(){
-vec2 uv = 2.*vUv - 1.;
+  vec2 uv = 2.*vUv - 1.;
   vec3 w = pow(warp3d(vec3(uv.x, sin(uv.y), uv.y), iTime*1.5), vec3(1.5));
   vec3 flame = 1.5*uFlameA*w.x; flame*=w.y; flame += uFlameB*w.z;
   flame *= smoothstep(0.25, 1., abs(uv.y));
@@ -199,7 +199,7 @@ float snoise(vec3 v){
   vec3 i = floor(v + dot(v, C.yyy)); vec3 x0 = v - i + dot(i, C.xxx);
   vec3 g = step(x0.yzx, x0.xyz); vec3 l = 1.0 - g;
   vec3 i1 = min(g.xyz, l.zxy); vec3 i2 = max(g.xyz, l.zxy);
-   vec3 x1 = x0 - i1 + 1.0 * C.xxx; vec3 x2 = x0 - i2 + 2.0 * C.xxx; vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
+  vec3 x1 = x0 - i1 + 1.0 * C.xxx; vec3 x2 = x0 - i2 + 2.0 * C.xxx; vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
   i = mod(i, 289.0);
   vec4 p = permute(permute(permute(i.z + vec4(0.0, i1.z, i2.z, 1.0)) + i.y + vec4(0.0, i1.y, i2.y, 1.0)) + i.x + vec4(0.0, i1.x, i2.x, 1.0));
   float n_ = 1.0/7.0; vec3 ns = n_ * D.wyz - D.xzx;
@@ -229,7 +229,7 @@ uniform vec3 uCursor; uniform float uRepelRadius; uniform float uRepelStrength; 
 varying float vFade; varying vec3 vColor;
 ${tunnelSnoise}
 void main() {
-vec3 wp = vec3(position.x * 7.0, 0.0, position.z * 25.0);
+  vec3 wp = vec3(position.x * 7.0, 0.0, position.z * 25.0);
   wp.x += position.y * 6.0;
   float wn = snoise(vec3(wp.x * 0.08, wp.z * 0.08, uTime * 0.15)) * 2.0;
   wn += snoise(vec3(wp.x * 0.16, wp.z * 0.16, uTime * 0.3)) * 0.8;
@@ -269,7 +269,7 @@ vec3 wp = vec3(position.x * 7.0, 0.0, position.z * 25.0);
 uniform float uOpacity; uniform float uBrightness; uniform float uAppear;
 varying float vFade; varying vec3 vColor;
 void main() {
- vec2 xy = gl_PointCoord - 0.5;
+  vec2 xy = gl_PointCoord - 0.5;
   float ll = length(xy);
   if (ll > 0.5) discard;
   float a = smoothstep(0.5, 0.1, ll);
@@ -319,7 +319,7 @@ void main(){
   vec4 mv = modelViewMatrix * vec4(v, 1.0);
   float r = length(v); float farF = 1.0 - smoothstep(5.0, 6.5, r); float nearF = smoothstep(0.0, 0.5, -mv.z);
   vA = farF * nearF;
-   gl_PointSize = size * uRes.y / 900.0 / -mv.z; gl_PointSize = max(gl_PointSize, 1.0);
+  gl_PointSize = size * uRes.y / 900.0 / -mv.z; gl_PointSize = max(gl_PointSize, 1.0);
   gl_Position = projectionMatrix * mv;
 }
 `,
@@ -428,8 +428,8 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
             bloomComposer.setSize(w, h);
             finalComposer.setPixelRatio(dpr);
             finalComposer.setSize(w, h);
-            
-             atmoMaterial.uniforms.uRes.value.set(w * dpr, h * dpr);
+
+            atmoMaterial.uniforms.uRes.value.set(w * dpr, h * dpr);
         });
 
         function render() {
@@ -439,3 +439,14 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
             mouse.x = Lerp(mouse.x, mouseTarget.x, 0.06);
             mouse.y = Lerp(mouse.y, mouseTarget.y, 0.06);
             sceneObj.render(scrollCurrent, mouse);
+
+            camera.layers.set(LAYERS.TORUS_SCENE); torusComposer.render();
+            camera.layers.set(LAYERS.BLOOM_SCENE); bloomComposer.render();
+            camera.layers.set(LAYERS.ENTIRE_SCENE); finalComposer.render();
+        }
+
+        render();
+    </script>
+</body>
+
+</html>
