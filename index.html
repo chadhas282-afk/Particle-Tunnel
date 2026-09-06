@@ -409,3 +409,13 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
 
                 tunnelUniforms.uCursor.value.copy(POINTER.world);
                 tunnelUniforms.uActivity.value = POINTER.activity;
+                const elapsed = (performance.now() - this.appearStart) / 1000;
+                tunnelUniforms.uAppear.value = Math.max(0, Math.min(1, (elapsed - 0.2) / 1.4));
+            }
+        };
+
+        window.addEventListener('resize', () => {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const dpr = window.devicePixelRatio;
+            renderer.setPixelRatio(dpr);
