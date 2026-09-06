@@ -379,3 +379,12 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
                 const dn = _dir.z;
                 if (Math.abs(dn) > 1e-4) { 
                     const tt = -camera.position.z / dn; 
+                    if (tt > 0 && Number.isFinite(tt)) {
+                        _tgt.copy(camera.position).addScaledVector(_dir, tt);
+                    }
+                }
+            }
+            POINTER.world.lerp(_tgt, 0.12);
+            const idle = (performance.now() - POINTER.lastMove) / 1000;
+            POINTER.activity += (((POINTER.active && idle < 3) ? 1 : 0) - POINTER.activity) * 0.06;
+        }
