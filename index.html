@@ -329,3 +329,13 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
   float tex = smoothstep(0.5, 0.0, l); gl_FragColor = vec4(uColor * tex, tex * vA * 0.6); }
 `
         });
+
+        const atmoPoints = new THREE.Points(atmoGeometry, atmoMaterial);
+        atmoPoints.frustumCulled = false;
+        atmoPoints.layers.enable(LAYERS.ENTIRE_SCENE);
+        
+        atmoPoints.onBeforeRender = function() {
+            const t = performance.now() / 1000;
+            atmoMaterial.uniforms.uTime.value = t * atmoSpeed * 8.0;
+            atmoPoints.position.copy(camera.position);
+            finalPass.uniforms.iTime.value = t;
