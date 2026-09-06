@@ -349,3 +349,13 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
             const innerHeight = window.innerHeight;
             if (scrollHeight > innerHeight) {
                 scrollTarget = clamp(window.scrollY / (scrollHeight - innerHeight), 0, 1);
+                } else {
+                scrollTarget = 0;
+            }
+        };
+        window.addEventListener('scroll', updateScroll);
+        window.addEventListener('resize', updateScroll);
+
+        const mouseTarget = new THREE.Vector2();
+        const mouse = new THREE.Vector2();
+        const POINTER = { active: false, lastMove: 0, world: new THREE.Vector3(), activity: 0 };
