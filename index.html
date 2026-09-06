@@ -369,3 +369,13 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
         window.addEventListener('mouseout', () => {
             POINTER.active = false;
         });
+
+        const _ndc = new THREE.Vector3(), _dir = new THREE.Vector3(), _tgt = new THREE.Vector3();
+        function updatePointerWorld() {
+            _tgt.set(0, 0, 0);
+            if (POINTER.active) {
+                _ndc.set(mouse.x, mouse.y, 0.5).unproject(camera);
+                _dir.copy(_ndc).sub(camera.position).normalize();
+                const dn = _dir.z;
+                if (Math.abs(dn) > 1e-4) { 
+                    const tt = -camera.position.z / dn; 
