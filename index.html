@@ -419,3 +419,13 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
             const h = window.innerHeight;
             const dpr = window.devicePixelRatio;
             renderer.setPixelRatio(dpr);
+            renderer.setSize(w, h, false);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            torusComposer.setPixelRatio(dpr);
+            torusComposer.setSize(w, h);
+            bloomComposer.setPixelRatio(dpr);
+            bloomComposer.setSize(w, h);
+            finalComposer.setPixelRatio(dpr);
+            finalComposer.setSize(w, h);
+            
