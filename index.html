@@ -279,3 +279,13 @@ void main() {
         });
 
         const tunnelPoints = new THREE.Points(tunnelGeometry, tunnelMaterial);
+        tunnelPoints.frustumCulled = false;
+        tunnelPoints.layers.enable(LAYERS.ENTIRE_SCENE);
+
+        const group = new THREE.Group();
+        group.add(tunnelPoints);
+        scene.add(group);
+
+        const N = atmoCount;
+        const positions = new Float32Array(N * 3), sizes = new Float32Array(N), seeds = new Float32Array(N);
+        for (let i = 0; i < N; i++) {
