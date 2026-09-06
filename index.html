@@ -289,8 +289,8 @@ void main() {
         const N = atmoCount;
         const positions = new Float32Array(N * 3), sizes = new Float32Array(N), seeds = new Float32Array(N);
         for (let i = 0; i < N; i++) {
-         positions[i*3] = 2*Math.random()-1; positions[i*3+1] = 2*Math.random()-1; positions[i*3+2] = 2*Math.random()-1;
-          sizes[i] = atmoSize * (0.4 + Math.random()); seeds[i] = Math.random();
+            positions[i * 3] = 2 * Math.random() - 1; positions[i * 3 + 1] = 2 * Math.random() - 1; positions[i * 3 + 2] = 2 * Math.random() - 1;
+            sizes[i] = atmoSize * (0.4 + Math.random()); seeds[i] = Math.random();
         }
         const atmoGeometry = new THREE.BufferGeometry();
         atmoGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
@@ -299,7 +299,7 @@ void main() {
 
         const atmoMaterial = new THREE.ShaderMaterial({
             transparent: true,
-             blending: THREE.AdditiveBlending,
+            blending: THREE.AdditiveBlending,
             depthWrite: false,
             depthTest: false,
             uniforms: {
@@ -333,13 +333,13 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
         const atmoPoints = new THREE.Points(atmoGeometry, atmoMaterial);
         atmoPoints.frustumCulled = false;
         atmoPoints.layers.enable(LAYERS.ENTIRE_SCENE);
-        
-        atmoPoints.onBeforeRender = function() {
+
+        atmoPoints.onBeforeRender = function () {
             const t = performance.now() / 1000;
             atmoMaterial.uniforms.uTime.value = t * atmoSpeed * 8.0;
             atmoPoints.position.copy(camera.position);
             finalPass.uniforms.iTime.value = t;
-            };
+        };
 
         scene.add(atmoPoints);
 
@@ -349,7 +349,7 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
             const innerHeight = window.innerHeight;
             if (scrollHeight > innerHeight) {
                 scrollTarget = clamp(window.scrollY / (scrollHeight - innerHeight), 0, 1);
-                } else {
+            } else {
                 scrollTarget = 0;
             }
         };
@@ -359,7 +359,7 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
         const mouseTarget = new THREE.Vector2();
         const mouse = new THREE.Vector2();
         const POINTER = { active: false, lastMove: 0, world: new THREE.Vector3(), activity: 0 };
-               
+
         window.addEventListener('mousemove', (e) => {
             mouseTarget.x = (e.clientX / window.innerWidth) * 2 - 1;
             mouseTarget.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -377,8 +377,8 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
                 _ndc.set(mouse.x, mouse.y, 0.5).unproject(camera);
                 _dir.copy(_ndc).sub(camera.position).normalize();
                 const dn = _dir.z;
-                if (Math.abs(dn) > 1e-4) { 
-                    const tt = -camera.position.z / dn; 
+                if (Math.abs(dn) > 1e-4) {
+                    const tt = -camera.position.z / dn;
                     if (tt > 0 && Number.isFinite(tt)) {
                         _tgt.copy(camera.position).addScaledVector(_dir, tt);
                     }
@@ -389,12 +389,23 @@ void main(){ vec2 p = gl_PointCoord - 0.5; float l = length(p); if (l > 0.5) dis
             POINTER.activity += (((POINTER.active && idle < 3) ? 1 : 0) - POINTER.activity) * 0.06;
         }
 
-const sceneObj = {
+        const sceneObj = {
             t0: performance.now() / 1000,
             appearStart: performance.now(),
             rollPhase: 0,
-            render: function(scroll, m) {
+            render: function (scroll, m) {
                 const t = performance.now() / 1000;
-                const dt = Math.min(0.05, t - this.t0); 
+                const dt = Math.min(0.05, t - this.t0);
                 this.t0 = t;
                 tunnelUniforms.uTime.value = t;
+
+                camera.position.set(m.x * parallax, m.y * parallax, 20 - scroll * scrollFly);
+                camera.lookAt(m.x * steer, m.y * steer, camera.position.z - 12);
+                updatePointerWorld();
+
+                tunnelUniforms.uSwirl.value = swirl * (1 + scroll * scrollSwirl);
+                this.rollPhase += dt * (spin + scroll * scrollRoll);
+                group.rotation.z = this.rollPhase;
+
+                tunnelUniforms.uCursor.value.copy(POINTER.world);
+                tunnelUniforms.uActivity.value = POINTER.activity;
