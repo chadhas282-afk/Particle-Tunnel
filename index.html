@@ -299,3 +299,13 @@ void main() {
 
         const atmoMaterial = new THREE.ShaderMaterial({
             transparent: true,
+             blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            depthTest: false,
+            uniforms: {
+                uTime: { value: 0 },
+                uColor: { value: hexToVec3(atmoColor) },
+                uRes: { value: new THREE.Vector2(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio) }
+            },
+            vertexShader: `
+attribute float size; attribute float seed; uniform float uTime; uniform vec2 uRes;
